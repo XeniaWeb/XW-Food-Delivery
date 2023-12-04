@@ -62,5 +62,5 @@ sail down
 ```sh
 docker run --rm --interactive --tty \
   --volume $PWD:/app \
-  composer <command>
+  composer install
 ```
