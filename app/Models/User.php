@@ -98,10 +98,9 @@ class User extends Authenticatable
     }
 
     /**
-     * @param string $permission
      * @return array
      */
-    public function permissions(string $permission): array
+    public function permissions(): array
     {
         return $this->roles()->with('permissions')->get()
             ->map(function ($role) {

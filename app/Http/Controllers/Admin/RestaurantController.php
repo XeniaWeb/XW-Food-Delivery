@@ -2,20 +2,30 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRestaurantRequest;
 use App\Http\Requests\UpdateRestaurantRequest;
 use App\Models\Restaurant;
+use Illuminate\Auth\Access\AuthorizationException;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class RestaurantController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * @throws AuthorizationException
      */
-    public function index()
+    public function index(): Response
     {
-        //
+        $this->authorize('restaurant.viewAny');
+
+        $restaurants = Restaurant::with(['city', 'owner'])->get();
+        return Inertia::render('Admin/Restaurants/Index', [
+            'restaurants' => $restaurants,
+        ]);
     }
 
     /**
