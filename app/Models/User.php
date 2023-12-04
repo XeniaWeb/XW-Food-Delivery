@@ -48,36 +48,59 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    /**
+     * @return BelongsToMany
+     */
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
     }
 
+    /**
+     * @return bool
+     */
     public function isAdmin(): bool
     {
         return $this->hasRole(RoleName::ADMIN);
     }
 
+    /**
+     * @return bool
+     */
     public function isVendor(): bool
     {
         return $this->hasRole(RoleName::VENDOR);
     }
 
+    /**
+     * @return bool
+     */
     public function isStaff(): bool
     {
         return $this->hasRole(RoleName::STAFF);
     }
 
+    /**
+     * @return bool
+     */
     public function isCustomer(): bool
     {
         return $this->hasRole(RoleName::CUSTOMER);
     }
 
+    /**
+     * @param RoleName $role
+     * @return bool
+     */
     public function hasRole(RoleName $role): bool
     {
         return $this->roles()->where('name', $role->value)->exists();
     }
 
+    /**
+     * @param string $permission
+     * @return array
+     */
     public function permissions(string $permission): array
     {
         return $this->roles()->with('permissions')->get()
@@ -86,13 +109,20 @@ class User extends Authenticatable
             })->flatten()->values()->unique()->toArray();
     }
 
+    /**
+     * @param string $permission
+     * @return bool
+     */
     public function hasPermission(string $permission): bool
     {
         return in_array($permission, $this->permissions(), true);
     }
 
+    /**
+     * @return HasMany
+     */
     public function restaurants(): HasMany
     {
-        return $this->hasMany(Restaurant::class);
+        return $this->hasMany(Restaurant::class, 'owner_id');
     }
 }

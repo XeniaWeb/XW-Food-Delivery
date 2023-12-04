@@ -20,11 +20,17 @@ class Restaurant extends Model
         'address',
     ];
 
+    /**
+     * @return BelongsTo
+     */
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);

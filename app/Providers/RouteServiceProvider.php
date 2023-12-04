@@ -24,9 +24,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
-        });
+        $this->configureRateLimiting();
 
         $this->routes(function () {
             Route::middleware('api')
@@ -35,6 +33,54 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
+
+            Route::middleware([
+                'web',
+                'verified',
+                'check_user_role:admin',
+            ])
+                ->as('admin.')
+                ->prefix('/admin')
+                ->group(base_path('routes/web_admin.php'));
+
+            Route::middleware([
+                'web',
+                'verified',
+                'check_user_role:vendor',
+            ])
+                ->as('vendor.')
+                ->prefix('/vendor')
+                ->group(base_path('routes/web_vendor.php'));
+
+            Route::middleware([
+                'web',
+                'verified',
+                'check_user_role:staff',
+            ])
+                ->as('staff.')
+                ->prefix('/staff')
+                ->group(base_path('routes/web_staff.php'));
+
+            Route::middleware([
+                'web',
+                'verified',
+                'check_user_role:customer',
+            ])
+                ->as('customer.')
+                ->prefix('/customer')
+                ->group(base_path('routes/web_customer.php'));
+        });
+    }
+
+    /**
+     * Configure the rate limiters for the application.
+     *
+     * @return void
+     */
+    protected function configureRateLimiting(): void
+    {
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
     }
 }

@@ -20,6 +20,7 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $this->createAdminRole();
+        $this->createVendorRole();
     }
 
     /**
@@ -44,5 +45,13 @@ class RoleSeeder extends Seeder
             ->pluck('id');
 
         $this->createRole(RoleName::ADMIN, $permissions);
+    }
+
+    /**
+     * @return void
+     */
+    protected function createVendorRole(): void
+    {
+        $this->createRole(RoleName::VENDOR, collect());
     }
 }
