@@ -43,7 +43,7 @@ class RestaurantController extends Controller
         $this->authorize('restaurant.create');
 
         return Inertia::render('Admin/Restaurants/Create', [
-            'cities' =>City::query()->get(['id', 'name']),
+            'cities' => City::query()->get(['id', 'name']),
         ]);
     }
 
@@ -85,10 +85,18 @@ class RestaurantController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     * @throws AuthorizationException
      */
-    public function edit(Restaurant $restaurant)
+    public function edit(Restaurant $restaurant): Response
     {
-        //
+        $this->authorize('restaurant.update');
+
+        $restaurant->load(['city', 'owner']);
+
+        return Inertia::render('Admin/Restaurants/Edit', [
+            'restaurant' => $restaurant,
+            'cities' => City::query()->get(['id', 'name']),
+        ]);
     }
 
     /**
@@ -96,8 +104,16 @@ class RestaurantController extends Controller
      */
     public function update(UpdateRestaurantRequest $request, Restaurant $restaurant)
     {
-        //
-    }
+        $validated = $request->validated();
+
+        $restaurant->update([
+            'city_id' => $validated['city_id'],
+            'name'    => $validated['restaurant_name'],
+            'address' => $validated['address'],
+        ]);
+
+        return to_route('admin.restaurants.index')
+            ->withStatus('Restaurant updated successfully.');    }
 
     /**
      * Remove the specified resource from storage.
