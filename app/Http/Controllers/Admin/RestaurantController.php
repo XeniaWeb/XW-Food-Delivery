@@ -12,6 +12,7 @@ use App\Models\City;
 use App\Models\Restaurant;
 use App\Models\Role;
 use App\Models\User;
+use App\Notifications\RestaurantOwnerInvitation;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -37,7 +38,7 @@ class RestaurantController extends Controller
      * Show the form for creating a new resource.
      * @throws AuthorizationException
      */
-    public function create()
+    public function create(): Response
     {
         $this->authorize('restaurant.create');
 
@@ -67,6 +68,8 @@ class RestaurantController extends Controller
                'name' => $validated['restaurant_name'],
                'address' => $validated['address'],
             ]);
+
+            $user->notify(new RestaurantOwnerInvitation($validated['restaurant_name']));
         });
 
         return to_route('admin.restaurants.index');
