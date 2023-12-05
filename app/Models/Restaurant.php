@@ -15,7 +15,7 @@ class Restaurant extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'city',
+        'city_id',
         'name',
         'address',
     ];

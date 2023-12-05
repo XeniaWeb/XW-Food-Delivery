@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\RoleName;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRestaurantRequest;
 use App\Http\Requests\UpdateRestaurantRequest;
+use App\Models\City;
 use App\Models\Restaurant;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -22,26 +28,48 @@ class RestaurantController extends Controller
     {
         $this->authorize('restaurant.viewAny');
 
-        $restaurants = Restaurant::with(['city', 'owner'])->get();
         return Inertia::render('Admin/Restaurants/Index', [
-            'restaurants' => $restaurants,
+            'restaurants' => Restaurant::with(['city', 'owner'])->get(),
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
+     * @throws AuthorizationException
      */
     public function create()
     {
-        //
+        $this->authorize('restaurant.create');
+
+        return Inertia::render('Admin/Restaurants/Create', [
+            'cities' =>City::query()->get(['id', 'name']),
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRestaurantRequest $request)
+    public function store(StoreRestaurantRequest $request): RedirectResponse
     {
-        //
+        $validated = $request->validated();
+
+        DB::transaction(function () use ($validated) {
+            $user = User::create([
+               'name' => $validated['owner_name'],
+               'email' => $validated['email'],
+               'password' => '',
+            ]);
+
+            $user->roles()->sync(Role::where('name', RoleName::VENDOR->value)->first());
+
+            $user->restaurants()->create([
+               'city_id' => (int)$validated['city_id'],
+               'name' => $validated['restaurant_name'],
+               'address' => $validated['address'],
+            ]);
+        });
+
+        return to_route('admin.restaurants.index');
     }
 
     /**

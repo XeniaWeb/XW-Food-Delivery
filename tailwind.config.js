@@ -13,11 +13,11 @@ export default {
 
   theme: {
     extend: {
-        colors: {
-            primary: colors.green,
-            danger: colors.red
-        },
-        fontFamily: {
+      colors: {
+        primary: colors.green,
+        danger: colors.red
+      },
+      fontFamily: {
         sans: ['Figtree', ...defaultTheme.fontFamily.sans]
       }
     }

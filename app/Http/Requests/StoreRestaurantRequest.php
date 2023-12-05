@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -14,7 +16,7 @@ class StoreRestaurantRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return Gate::allows('restaurant.create');
     }
 
     /**
@@ -25,7 +27,11 @@ class StoreRestaurantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'restaurant_name' => ['required', 'string', 'max:255'],
+            'email'           => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
+            'owner_name'      => ['required', 'string', 'max:255'],
+            'city_id'         => ['required', 'numeric', 'exists:cities,id'],
+            'address'         => ['required', 'string', 'max:1000'],
         ];
     }
 }
