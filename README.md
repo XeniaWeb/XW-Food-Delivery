@@ -58,6 +58,11 @@ sail down
 ./vendor/bin/sail artisan db:seed --force
 ```
 
+### Remigrate Database with new fake data
+```sh
+./vendor/bin/sail php artisan migrate:fresh --seed
+```
+
 ### If no ./vendor directory yet
 ```sh
 docker run --rm --interactive --tty \

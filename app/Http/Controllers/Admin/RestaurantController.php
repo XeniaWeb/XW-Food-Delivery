@@ -113,7 +113,8 @@ class RestaurantController extends Controller
         ]);
 
         return to_route('admin.restaurants.index')
-            ->withStatus('Restaurant updated successfully.');    }
+            ->withStatus('Restaurant updated successfully.');
+    }
 
     /**
      * Remove the specified resource from storage.

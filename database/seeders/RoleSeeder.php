@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Enums\RoleName;
@@ -52,6 +54,11 @@ class RoleSeeder extends Seeder
      */
     protected function createVendorRole(): void
     {
-        $this->createRole(RoleName::VENDOR, collect());
+        $permissions = Permission::query()
+            ->where('name', 'like', 'category.%')
+            ->orWhere('name', 'like', 'product.%')
+            ->pluck('id');
+
+        $this->createRole(RoleName::VENDOR, $permissions);
     }
 }
