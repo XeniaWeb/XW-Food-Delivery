@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
-import { Head, useForm } from '@inertiajs/vue3'
+import { Head, Link, useForm } from '@inertiajs/vue3'
 import InputError from '@/Components/InputError.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
@@ -38,11 +38,15 @@ const submit = () => {
                   />
                   <InputError :message="form.errors.name" />
                 </div>
-
-                <div>
-                  <PrimaryButton :processing="form.processing">
-                    Create New Product Category
-                  </PrimaryButton>
+                <div class="flex justify-between">
+                  <div>
+                    <PrimaryButton :processing="form.processing">
+                      Create New Product Category
+                    </PrimaryButton>
+                  </div>
+                  <div class="">
+                    <Link :href="route('vendor.menu')" class="btn btn-warning btn-sm"> Cancel</Link>
+                  </div>
                 </div>
               </form>
             </div>

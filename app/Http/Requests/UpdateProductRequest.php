@@ -26,7 +26,16 @@ class UpdateProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'category_id' => ['required', 'exists:categories,id'],
+            'name' => ['required', 'string', 'max:255'],
+            'price' => ['required', 'numeric'],
         ];
+    }
+
+    public function prepareForValidation(): void
+    {
+        $this->merge([
+            'price' => (int)($this->price * 100),
+        ]);
     }
 }

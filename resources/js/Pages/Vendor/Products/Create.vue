@@ -5,29 +5,34 @@ import InputError from '@/Components/InputError.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
+import SelectInput from '@/Components/SelectInput.vue'
 
 const props = defineProps({
   category: {
     type: Object
+  },
+  categories: {
+    type: Array
   }
 })
-
 const form = useForm({
-  name: props.category.name
+  category_id: props.category.id,
+  name: '',
+  price: ''
 })
 
 const submit = () => {
-  form.patch(route('vendor.categories.update', props.category))
+  form.post(route('vendor.products.store'))
 }
 </script>
 
 <template>
-  <Head :title="'Edit ' + category.name" />
+  <Head :title="'Add Product to ' + props.category.name" />
 
   <AuthenticatedLayout>
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ 'Edit ' + category.name }}
+        {{ 'Add new Product to Category: "' + props.category.name + '"' }}
       </h2>
     </template>
 
@@ -38,6 +43,17 @@ const submit = () => {
             <div class="p-6 text-gray-900 overflow-x-auto">
               <form @submit.prevent="submit" class="flex flex-col gap-4">
                 <div class="form-group">
+                  <InputLabel for="category_id" value="Category" />
+                  <SelectInput
+                    id="category_id"
+                    v-model="form.category_id"
+                    option-label="name"
+                    option-value="id"
+                    :options="categories"
+                    :disabled="form.processing"
+                  />
+                </div>
+                <div class="form-group">
                   <InputLabel for="name" value="Name" />
                   <TextInput
                     id="name"
@@ -47,10 +63,20 @@ const submit = () => {
                   />
                   <InputError :message="form.errors.name" />
                 </div>
+                <div class="form-group">
+                  <InputLabel for="price" value="Price" />
+                  <TextInput
+                    id="price"
+                    type="text"
+                    v-model="form.price"
+                    :disabled="form.processing"
+                  />
+                  <InputError :message="form.errors.price" />
+                </div>
                 <div class="flex justify-between">
                   <div>
                     <PrimaryButton :processing="form.processing">
-                      Update Product Category
+                      Create New Product Category
                     </PrimaryButton>
                   </div>
                   <div class="">

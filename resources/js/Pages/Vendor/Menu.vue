@@ -22,7 +22,7 @@ defineProps({
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           <div class="p-6" v-if="can('category.create')">
             <Link class="btn btn-primary" :href="route('vendor.categories.create')">
-              Add New Product Category
+              Add New Category
             </Link>
           </div>
           <div class="p-6 text-gray-900 overflow-x-auto flex flex-col gap-8">
@@ -48,7 +48,14 @@ defineProps({
                   </Link>
                 </div>
               </div>
-              <div>Add Product Button: Coming Soon</div>
+              <div>
+                <Link
+                  class="btn btn-secondary hover:bg-primary-100/50"
+                  :href="route('vendor.products.create', { category_id: category.id })"
+                >
+                  Add Product to {{ category.name }}
+                </Link>
+              </div>
               <div class="flex flex-col gap-6">
                 <div
                   v-for="product in category.products"
@@ -59,7 +66,22 @@ defineProps({
                     <div class="font-bold">{{ product.name }}</div>
                     <div class="">{{ (product.price / 100).toFixed(2) }} &euro;</div>
                   </div>
-                  <div class="flex gap-4">Edit / Delete Product Buttons: Coming Soon</div>
+                  <div class="flex gap-4">
+                    <Link
+                      :href="route('vendor.products.edit', product)"
+                      class="btn btn-secondary btn-sm"
+                    >
+                      Edit
+                    </Link>
+                    <Link
+                      :href="route('vendor.products.destroy', product)"
+                      class="btn btn-danger btn-sm"
+                      method="delete"
+                      as="button"
+                    >
+                      Delete
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
