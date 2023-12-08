@@ -72,7 +72,10 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        //
+        $category->update($request->only('name'));
+
+        return to_route('vendor.menu')
+            ->withStatus('Category updated successfully.');
     }
 
     /**
@@ -80,6 +83,9 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return to_route('vendor.menu')
+            ->withStatus('Product Category deleted successfully.');
     }
 }

@@ -13,20 +13,22 @@ const props = defineProps({
 })
 
 const form = useForm({
-  name: '',
-  restaurant_id: props.restaurant.id
+  name: props.category.name
 })
+
 const submit = () => {
-  form.post(route('vendor.categories.store'))
+  form.patch(route('vendor.categories.update', props.category))
 }
 </script>
 
 <template>
-  <Head title="Add New Product Category" />
+  <Head :title="'Edit ' + category.name" />
 
   <AuthenticatedLayout>
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Add New Product Category</h2>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        {{ 'Edit ' + category.name }}
+      </h2>
     </template>
 
     <div class="py-12">
@@ -35,7 +37,6 @@ const submit = () => {
           <div class="p-6 text-gray-900 overflow-x-auto">
             <div class="p-6 text-gray-900 overflow-x-auto">
               <form @submit.prevent="submit" class="flex flex-col gap-4">
-                <input type="hidden" name="restaurant_id" v-model="form.restaurant_id" />
                 <div class="form-group">
                   <InputLabel for="name" value="Name" />
                   <TextInput
@@ -49,7 +50,7 @@ const submit = () => {
 
                 <div>
                   <PrimaryButton :processing="form.processing">
-                    Create New Product Category
+                    Update Product Category
                   </PrimaryButton>
                 </div>
               </form>
