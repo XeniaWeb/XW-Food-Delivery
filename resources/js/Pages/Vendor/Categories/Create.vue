@@ -6,15 +6,8 @@ import InputLabel from '@/Components/InputLabel.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
 
-const props = defineProps({
-  restaurant: {
-    type: Object
-  }
-})
-
 const form = useForm({
-  name: '',
-  restaurant_id: props.restaurant.id
+  name: ''
 })
 const submit = () => {
   form.post(route('vendor.categories.store'))
@@ -35,7 +28,6 @@ const submit = () => {
           <div class="p-6 text-gray-900 overflow-x-auto">
             <div class="p-6 text-gray-900 overflow-x-auto">
               <form @submit.prevent="submit" class="flex flex-col gap-4">
-                <input type="hidden" name="restaurant_id" v-model="form.restaurant_id" />
                 <div class="form-group">
                   <InputLabel for="name" value="Name" />
                   <TextInput

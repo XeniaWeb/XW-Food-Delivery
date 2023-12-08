@@ -46,7 +46,7 @@ class UserSeeder extends Seeder
 
         $vendor->roles()->sync(Role::where('name', RoleName::VENDOR->value)->first());
 
-        $vendor->restaurants()->create([
+        $vendor->restaurant()->create([
             'city_id' => City::where('name', 'Schwyz')->value('id'),
             'name'    => 'Restaurant 001',
             'address' => 'Address DLKS22',

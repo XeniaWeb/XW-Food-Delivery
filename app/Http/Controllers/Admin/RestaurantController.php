@@ -63,7 +63,7 @@ class RestaurantController extends Controller
 
             $user->roles()->sync(Role::where('name', RoleName::VENDOR->value)->first());
 
-            $user->restaurants()->create([
+            $user->restaurant()->create([
                'city_id' => (int)$validated['city_id'],
                'name' => $validated['restaurant_name'],
                'address' => $validated['address'],

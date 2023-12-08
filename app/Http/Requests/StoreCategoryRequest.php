@@ -27,7 +27,6 @@ class StoreCategoryRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'restaurant_id' => ['required', 'numeric', 'exists:restaurants,id'],
         ];
     }
 }

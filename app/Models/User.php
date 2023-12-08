@@ -8,7 +8,7 @@ namespace App\Models;
 use App\Enums\RoleName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -118,10 +118,10 @@ class User extends Authenticatable
     }
 
     /**
-     * @return HasMany
+     * @return HasOne
      */
-    public function restaurants(): HasMany
+    public function restaurant(): HasOne
     {
-        return $this->hasMany(Restaurant::class, 'owner_id');
+        return $this->hasOne(Restaurant::class, 'owner_id');
     }
 }

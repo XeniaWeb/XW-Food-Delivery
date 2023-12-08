@@ -60,7 +60,7 @@ sail down
 
 ### Remigrate Database with new fake data
 ```sh
-./vendor/bin/sail php artisan migrate:fresh --seed
+./vendor/bin/sail artisan migrate:fresh --seed
 ```
 
 ### If no ./vendor directory yet

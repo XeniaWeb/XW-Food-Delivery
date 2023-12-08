@@ -30,11 +30,7 @@ class CategoryController extends Controller
     {
         $this->authorize('category.create');
 
-        $restaurant = auth()->user()->restaurants()->first();
-
-        return Inertia::render('Vendor/Categories/Create', [
-            'restaurant' => $restaurant,
-        ]);
+        return Inertia::render('Vendor/Categories/Create');
     }
 
     /**
@@ -44,13 +40,14 @@ class CategoryController extends Controller
     {
         $validated = $request->validated();
 
-        $category = Category::create([
-            'name' => $validated['name'],
-            'restaurant_id' => $validated['restaurant_id'],
-        ]);
+        $newCategory = $request->user()
+            ->restaurant
+            ->categories()
+            ->create($request->only('name'));
 
         return to_route('vendor.menu')
-            ->withStatus('Category ' . $category->name . ' created successfully.');      }
+            ->withStatus('Category "' . $newCategory->name . '" created successfully.');
+    }
 
     /**
      * Display the specified resource.
