@@ -2,21 +2,34 @@
 
 namespace App\Notifications;
 
+use App\Models\Order;
+use App\Models\Restaurant;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Password;
 
-class RestaurantOwnerInvitation extends Notification
+class NewOrderCreated extends Notification
 {
     use Queueable;
 
+    protected Order $order;
+    protected Restaurant $restaurant;
+    protected Collection $products;
+    protected User $customer;
+
     /**
      * Create a new notification instance.
+     * @param Order $order
      */
-    public function __construct(public string $restaurantName)
+    public function __construct(Order $order)
     {
+        $this->order      = $order;
+        $this->restaurant = $order->restaurant;
+        $this->products   = $order->orderProducts;
+        $this->customer   = $order->customer;
     }
 
     /**
@@ -34,20 +47,15 @@ class RestaurantOwnerInvitation extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $url = route('password.reset', [
-            'token' => Password::createToken($notifiable),
-            'email' => $notifiable->getEmailForPasswordReset(),
-        ]);
-
         return (new MailMessage)
-            ->subject(__('We invite you to join :app to manage :restaurant', [
-                'restaurant' => $this->restaurantName,
-                'app' => config('app.name'),
+            ->subject(__('[:restaurant_name] New Order', [
+                'restaurant_name' => $this->restaurant->name,
             ]))
-            ->markdown('mail.restaurant.owner-invitation', [
-                'setUrl' => $url,
-                'restaurant' => $this->restaurantName,
-                'requestNewUrl' => route('password.request'),
+            ->markdown('mail.order.new-order-created', [
+                'order' => $this->order,
+                'restaurant' => $this->restaurant,
+                'products' => $this->products,
+                'customer' => $this->customer,
             ]);
     }
 

@@ -12,6 +12,12 @@ const form = useForm({
 const removeProduct = (uuid) => {
   form.post(route('customer.cart.remove', uuid), { preserveScroll: true })
 }
+
+const order = useForm({})
+
+const placeOrder = () => {
+  order.post(route('customer.orders.store'))
+}
 </script>
 
 <template>
@@ -25,7 +31,7 @@ const removeProduct = (uuid) => {
     <div class="py-12">
       <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-          <div class="p-6 text-gray-900 overflow-x-scroll flex flex-col gap-6">
+          <div class="p-6 text-gray-900 overflow-x-auto flex flex-col gap-6">
             <div
               v-for="product in $page.props.cart.items"
               :key="product.uuid"
@@ -62,7 +68,7 @@ const removeProduct = (uuid) => {
               <div>{{ ($page.props.cart.total / 100).toFixed(2) }} &euro;</div>
             </div>
             <div class="mt-4" v-if="$page.props.cart.items.length">
-              <PrimaryButton type="button">Place Order</PrimaryButton>
+              <PrimaryButton type="button" @click="placeOrder">Place Order</PrimaryButton>
             </div>
           </div>
         </div>
