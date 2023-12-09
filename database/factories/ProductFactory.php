@@ -20,7 +20,7 @@ class ProductFactory extends Factory
         return [
             'category_id' => 1,
             'name' => fake()->colorName(),
-            'price' => fake()->randomNumber(3),
+            'price' => rand(499, 2999),
         ];
     }
 }
