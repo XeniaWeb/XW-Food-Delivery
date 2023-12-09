@@ -44,6 +44,12 @@ const showingNavigationDropdown = ref(false)
             </div>
 
             <div v-if="$page.props.auth.user" class="hidden sm:flex sm:items-center sm:ms-6">
+              <Link
+                v-if="can('cart.add')"
+                :href="route('customer.cart.index')"
+                class="btn btn-primary"
+                >View basket {{ ($page.props.cart.total / 100).toFixed(2) }} &euro;
+              </Link>
               <!-- Settings Dropdown -->
               <div class="ms-3 relative">
                 <Dropdown align="right" width="48">
@@ -86,6 +92,12 @@ const showingNavigationDropdown = ref(false)
             </div>
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
+              <Link
+                v-if="can('cart.add')"
+                :href="route('customer.cart.index')"
+                class="btn btn-primary"
+                >View basket {{ ($page.props.cart.total / 100).toFixed(2) }} &euro;
+              </Link>
               <button
                 @click="showingNavigationDropdown = !showingNavigationDropdown"
                 class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
