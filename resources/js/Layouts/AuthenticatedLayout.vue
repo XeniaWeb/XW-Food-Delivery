@@ -1,11 +1,11 @@
 <script setup>
 import { ref } from 'vue'
-import ApplicationLogo from '@/Components/ApplicationLogo.vue'
 import Dropdown from '@/Components/Dropdown.vue'
 import DropdownLink from '@/Components/DropdownLink.vue'
 import NavLink from '@/Components/NavLink.vue'
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue'
 import { Link } from '@inertiajs/vue3'
+import AppLogoXeniaWeb from '@/Components/AppLogoXeniaWeb.vue'
 
 const showingNavigationDropdown = ref(false)
 </script>
@@ -20,8 +20,8 @@ const showingNavigationDropdown = ref(false)
             <div class="flex">
               <!-- Logo -->
               <div class="shrink-0 flex items-center">
-                <Link :href="route('dashboard')">
-                  <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />
+                <Link :href="route('home')">
+                  <AppLogoXeniaWeb class="block h-9 w-auto fill-current" />
                 </Link>
               </div>
 
@@ -43,7 +43,7 @@ const showingNavigationDropdown = ref(false)
               </div>
             </div>
 
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <div v-if="$page.props.auth.user" class="hidden sm:flex sm:items-center sm:ms-6">
               <!-- Settings Dropdown -->
               <div class="ms-3 relative">
                 <Dropdown align="right" width="48">
@@ -72,7 +72,7 @@ const showingNavigationDropdown = ref(false)
                   </template>
 
                   <template #content>
-                    <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
+                    <DropdownLink :href="route('profile.edit')">Profile</DropdownLink>
                     <DropdownLink :href="route('logout')" method="post" as="button">
                       Log Out
                     </DropdownLink>
@@ -80,7 +80,10 @@ const showingNavigationDropdown = ref(false)
                 </Dropdown>
               </div>
             </div>
-
+            <div v-else class="hidden sm:flex gap-4 items-center sm:ml-6">
+              <Link :href="route('login')" class="btn btn-secondary">Login</Link>
+              <Link :href="route('register')" class="btn btn-primary">Register</Link>
+            </div>
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
               <button
@@ -120,13 +123,13 @@ const showingNavigationDropdown = ref(false)
           class="sm:hidden"
         >
           <div class="pt-2 pb-3 space-y-1">
-            <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-              Dashboard
+            <ResponsiveNavLink :href="route('home')" :active="route().current('home')">
+              Home
             </ResponsiveNavLink>
           </div>
 
           <!-- Responsive Settings Options -->
-          <div class="pt-4 pb-1 border-t border-gray-200">
+          <div v-if="$page.props.auth.user" class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
               <div class="font-medium text-base text-gray-800">
                 {{ $page.props.auth.user.name }}
@@ -135,7 +138,7 @@ const showingNavigationDropdown = ref(false)
             </div>
 
             <div class="mt-3 space-y-1">
-              <ResponsiveNavLink :href="route('profile.edit')"> Profile </ResponsiveNavLink>
+              <ResponsiveNavLink :href="route('profile.edit')">Profile</ResponsiveNavLink>
               <ResponsiveNavLink :href="route('logout')" method="post" as="button">
                 Log Out
               </ResponsiveNavLink>
